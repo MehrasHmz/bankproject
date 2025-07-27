@@ -98,3 +98,78 @@ class GharzAccount : public BankAccount {
 public:
     string getType() const override { return "Loan"; }
 };
+// ==================== User Class ========================
+
+class User {
+protected:
+    string name, lastName, nationalCode;
+    int age;
+    string username, password;
+    vector<BankAccount*> accounts;
+
+public:
+    User(string name, string last, string nat, int age, string user, string pass)
+            : name(name), lastName(last), nationalCode(nat), age(age), username(user), password(pass) {}
+
+    virtual string getRole() const = 0;
+
+    string getUsername() const { return username; }
+    string getName() const { return name; }
+
+    bool login(string user, string pass) {
+        return (username == user && password == pass);
+    }
+
+    bool addAccount(BankAccount* acc) {
+        if (accounts.size() >= 5) return false;
+        accounts.push_back(acc);
+        return true;
+    }
+
+    BankAccount* findAccountByCard(string card) {
+        for (auto acc : accounts) {
+            if (acc->getCardNumber() == card) return acc;
+        }
+        return nullptr;
+    }
+
+    void showAccounts() {
+        for (auto acc : accounts)
+            acc->displayInfo();
+    }
+
+    vector<BankAccount*>& getAccounts() { return accounts; }
+
+    virtual ~User() {
+        for (auto acc : accounts)
+            delete acc;
+    }
+};
+// ==================== Customer ========================
+
+class Customer : public User {
+public:
+    Customer(string name, string last, string nat, int age, string user, string pass)
+            : User(name, last, nat, age, user, pass) {}
+
+    string getRole() const override { return "Customer"; }
+
+    bool transfer(string toCard, double amount, vector<User*>& allUsers) {
+        for (auto myAcc : accounts) {
+            if (myAcc->getBalance() >= amount) {
+                for (auto user : allUsers) {
+                    for (auto acc : user->getAccounts()) {
+                        if (acc->getCardNumber() == toCard) {
+                            myAcc->withdraw(amount);
+                            acc->deposit(amount);
+                            cout << "Transfer successful!" << endl;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        cout << "Transfer failed. Card not found or insufficient funds." << endl;
+        return false;
+    }
+};
