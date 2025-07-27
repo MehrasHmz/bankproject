@@ -1,0 +1,3 @@
+C:/Users/mehra/CLionProjects/BankPrj/cmake-build-debug/CMakeFiles/BankPrj.dir
+C:/Users/mehra/CLionProjects/BankPrj/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/mehra/CLionProjects/BankPrj/cmake-build-debug/CMakeFiles/rebuild_cache.dir
